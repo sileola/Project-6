@@ -1,0 +1,8 @@
+/dev/mapper/webdata--vg-apps--lv: UUID="4c11e9c4-7f80-49bf-b1b3-71bed4a96cf7" BLOCK_SIZE="4096" TYPE="ext4"
+/dev/mapper/webdata--vg-logs--lv: UUID="abe66f51-f7ea-4937-933e-36740d497a99" BLOCK_SIZE="4096" TYPE="ext4"
+
+
+
+
+/dev/mapper/webdata--vg-apps--lv: UUID=4c11e9c4-7f80-49bf-b1b3-71bed4a96cf7  /var/www/html ext4 defaults 0 0
+/dev/mapper/webdata--vg-logs--lv: UUID=abe66f51-f7ea-4937-933e-36740d497a99  /var/log	   ext4 defaults 0 0

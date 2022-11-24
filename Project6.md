@@ -111,3 +111,64 @@ To verify the entire setup, I ran the following commands:
 ![](./images/lsblk.PNG)
 
 
+Next, I used *mkfs.ext4* to format the logical volumes with ext4 filesystem, using the commands below:
+
+`sudo mkfs -t ext4 /dev/webdata-vg/apps-lv`
+
+`sudo mkfs -t ext4 /dev/webdata-vg/logs-lv`
+
+Next, I created */var/www/html* directory to store website files:
+
+`sudo mkdir -p /var/www/html`
+
+Also, I created /home/recovery/logs to store backup of log data
+
+`sudo mkdir -p /home/recovery/logs`
+
+Then, I mounted /var/www/html on apps-lv logical volume with the command below:
+
+`sudo mount /dev/webdata-vg/apps-lv /var/www/html/`
+
+Next, I used *rsync utility* to backup all the files in the log directory */var/log* into */home/recovery/logs* (This is required before mounting the file system)
+
+`sudo rsync -av /var/log /home/recovery/logs/`
+
+![](./images/rsync.PNG)
+
+
+Next, I mounted /var/log on logs-lv logical volume
+
+`sudo mount /dev/webdata-vg/logs-lv /var/log`
+
+
+Next, restored log files back into /var/log directory using the command below:
+
+`sudo rsync -av /home/recovery/logs/log/ /var/log`
+
+Next, I run the command below to copy display and copy the block ID
+
+`sudo blkid`
+
+![](./images/blkid.PNG)
+
+Then, I copied the UUID for /dev/mapper/webdata--vg-logs--lv and for /dev/mapper/webdata--vg-apps--lv on to a notepad
+
+
+
+Next, I update */etc/fstab* file so that the mount configuration will persist after restart of the server. 
+
+`sudo vi /etc/fstab`
+
+![](./images/fstab.PNG)
+
+Next, I ran the following  commands to respectively est the configuration and reload the daemon:
+
+`sudo mount -a`
+ `sudo systemctl daemon-reload`
+
+ Next, I verified my setup by running this command:
+
+ `df -h`
+
+ The output is displayed below:
+ ![](./images/df-h.PNG)
