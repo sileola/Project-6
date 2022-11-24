@@ -2,7 +2,7 @@
 
 To begin with, I launched two EC2 instances using Redhat (not Ubuntu). One instance will serve as the 'Web Server' while the other will serve as the 'Database Server'.
 
-Next, I create 3 volumes in the same AZ (Availability Zone) as my Web Server EC2, each of 10 GiB and respectively name web1, web2 and web3.
+Next, I created 3 volumes in the same AZ (Availability Zone) as my Web Server EC2, each of 10 GiB and respectively name web1, web2 and web3.
 
 ![](./images/volumes.PNG)
 
@@ -45,3 +45,69 @@ Similarly, the previous step was repeated the *xvdh disk*, as below:
 `sudo gdisk /dev/xvdh`
 
 ![xvdh disk configuration](./images/xvdh_disk.PNG "xvdh disk configuration")
+
+Next, I used the *lsblk utility* to view the newly configured partition on each of the 3 disks. This is displayed below:
+
+![](./images/lsbkl.PNG)
+
+Next, I installed *lvm2* package using sudo yum install lvm2 by running the command below
+
+`sudo yum install lvm2 -y`
+
+![](./images/lvm2_installation.PNG)
+
+
+To check for available partitions, I ran the command below:
+
+`sudo lvmdiskscan`
+
+The output is shown below:
+
+![](./images/available_partitions.PNG)
+
+
+Next, I used the *pvcreate* utility to mark each of 3 disks as physical volumes (PVs) to be used by LVM
+
+`sudo pvcreate /dev/xvdf1 /dev/xvdg1 /dev/xvdg1`
+
+![](./images/PV_creation.PNG)
+
+
+To verify that the Physical volume has been created successfully, I ran this command:
+
+`sudo pvs`
+
+![](./images/pvs.PNG)
+
+Next, I used the  *vgcreate utility* to add all 3 PVs to a volume group (VG). The VG was named *webdata-vg*
+
+`sudo vgcreate webdata-vg /dev/xvdf1 /dev/xvdg1 /dev/xvdh1`
+
+To verify that this was done successfully, I ran the command:
+
+`sudo vgs`
+
+![](./images/volume_group.PNG)
+
+Next, I used teh *lvcreate utility* to create 2 logical volumes: **apps-lv** (using half of the PV size), and **logs-lv** (using the remaining space of the PV size), with the commands below:
+
+`sudo lvcreate -n apps-lv -L 14G webdata-vg`
+
+`sudo lvcreate -n logs-lv -L 14G webdata-vg`
+
+
+To verify that the Logical Volumes has been created successfully, i ram the command below:
+
+`sudo lvs`
+
+![](./images/logical_volume_creation.PNG)
+
+To verify the entire setup, I ran the following commands:
+
+`sudo vgdisplay -v #view complete setup - VG, PV, and LV`
+
+`sudo lsblk`
+
+![](./images/lsblk.PNG)
+
+
