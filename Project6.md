@@ -117,9 +117,9 @@ To verify the entire setup, I ran the following commands:
 
 Next, I used *mkfs.ext4* to format the logical volumes with ext4 filesystem, using the commands below:
 
-`sudo mkfs -t ext4 /dev/webdata-vg/apps-lv`
+`sudo mkfs.ext4 /dev/webdata-vg/apps-lv`
 
-`sudo mkfs -t ext4 /dev/webdata-vg/logs-lv`
+`sudo mkfs.ext4 /dev/webdata-vg/logs-lv`
 
 Next, I created */var/www/html* directory to store website files:
 
@@ -168,6 +168,7 @@ Next, I update */etc/fstab* file so that the mount configuration will persist af
 Next, I ran the following  commands to respectively est the configuration and reload the daemon:
 
 `sudo mount -a`
+
  `sudo systemctl daemon-reload`
 
  Next, I verified my setup by running this command:

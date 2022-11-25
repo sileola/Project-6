@@ -4,5 +4,18 @@
 
 
 
-/dev/mapper/webdata--vg-apps--lv: UUID=4c11e9c4-7f80-49bf-b1b3-71bed4a96cf7  /var/www/html ext4 defaults 0 0
+/dev/mapper/webdata--vg-apps--lv: UUID=4c11e9c4-7f80-49bf-b1b3-71bed4a96cf7  
 /dev/mapper/webdata--vg-logs--lv: UUID=abe66f51-f7ea-4937-933e-36740d497a99  /var/log	   ext4 defaults 0 0
+
+
+
+/dev/mapper/webdata--vg-apps--lv: UUID="4ae55125-04d7-4bdb-bf4d-92b5e357ea4f /var/www/html ext4 defaults 0 0
+
+
+/dev/mapper/webdata--vg-logs--lv: UUID="495bae35-9ef8-4d04-8859-74b5999868ed /var/log	   ext4 defaults 0 0
+
+
+UUID=4ae55125-04d7-4bdb-bf4d-92b5e357ea4f /var/www/html ext4 defaults 0 0
+
+
+UUID=495bae35-9ef8-4d04-8859-74b5999868ed /var/log	ext4 defaults 0 0
