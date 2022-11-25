@@ -72,7 +72,7 @@ The output is shown below:
 
 Next, I used the *pvcreate* utility to mark each of 3 disks as physical volumes (PVs) to be used by LVM
 
-`sudo pvcreate /dev/xvdf1 /dev/xvdg1 /dev/xvdg1`
+`sudo pvcreate /dev/xvdf1 /dev/xvdg1 /dev/xvdh1`
 
 ![](./images/PV_creation.PNG)
 
@@ -192,3 +192,15 @@ From my database server instance, I ran the command below to confirm that my vol
 
 `lsblk`
 
+![](./images/lsblkdb.PNG)
+
+To see all (available) mount points and free space on my server, I ran this command:
+
+`df -h`
+
+![](./images/dfhdb.PNG)
+
+
+Next, I used the gdisk utility to create a single partition on each of the 3 disks, beginning with the first volume, using the command below:
+
+`sudo gdisk /dev/xvdf`
