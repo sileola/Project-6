@@ -2,7 +2,11 @@
 
 To begin with, I launched two EC2 instances using Redhat (not Ubuntu). One instance will serve as the 'Web Server' while the other will serve as the 'Database Server'.
 
-Next, I created 3 volumes in the same AZ (Availability Zone) as my Web Server EC2, each of 10 GiB and respectively name web1, web2 and web3.
+___
+## **STEP 1 — PREPARING THE WEB SERVER**
+___
+
+Firstly, I created 3 volumes in the same AZ (Availability Zone) as my Web Server EC2, each of 10 GiB and respectively name web1, web2 and web3.
 
 ![](./images/volumes.PNG)
 
@@ -172,3 +176,8 @@ Next, I ran the following  commands to respectively est the configuration and re
 
  The output is displayed below:
  ![](./images/df-h.PNG)
+
+___
+ ## **STEP 2 — PREPARING THE DATABASE SERVER**
+ ___
+
