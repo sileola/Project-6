@@ -314,3 +314,152 @@ The output is displayed below:
 ![](./images/setup_db_view.PNG)
 
 
+ ## **STEP 3 — INSTALLING WORDPRESS ON THE WEB SERVER EC2**
+
+ Update the repository
+
+ `sudo yum -y update`
+
+ Install wget, Apache and it’s dependencies
+
+ `sudo yum -y install wget httpd php php-mysqlnd php-fpm php-json`
+
+ Start Apache
+
+ `sudo systemctl enable httpd`
+`sudo systemctl start httpd`
+
+
+Next, install PHP and it’s dependencies
+
+`sudo yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm`
+
+`sudo yum install yum-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm -y`
+
+`sudo yum module list php`
+
+`sudo yum module reset php`
+
+`sudo yum module enable php:remi-7.4`
+
+`sudo yum install php php-opcache php-gd php-curl php-mysqlnd`
+
+`sudo systemctl start php-fpm`
+
+`sudo systemctl enable php-fpm`
+
+`sudo setsebool -P httpd_execmem 1`
+
+Next, restart Apache
+
+`sudo systemctl restart httpd`
+
+Download wordpress and copy wordpress to var/www/html
+
+`mkdir wordpress`
+
+  `cd wordpress`
+
+  `sudo wget http://wordpress.org/latest.tar.gz`
+
+  `sudo tar xzvf latest.tar.gz`
+
+ `sudo rm -rf latest.tar.gz`
+
+  `sudo cp wordpress/wp-config-sample.php wordpress/wp-config.php`
+
+  `sudo cp -R wordpress/. /var/www/html/`
+
+  Configure SELinux Policies
+
+  ## **STEP 4 — INSTALLING WMYSQL ON THE DATABASE SERVER EC2**
+
+`sudo yum update`
+`sudo yum install mysql-server -y`
+
+Verify that the service is up and running by using `sudo systemctl status mysqld`, if it is not running, restart the service and enable it so it will be running even after reboot:
+
+`sudo systemctl restart mysqld`
+`sudo systemctl enable mysqld`
+
+The status is displayed below:
+
+![](./images/mysql_status_db.PNG)
+
+
+## **STEP 5  — CONFIGURING DATABASE SERVER TO WORK WITH WORDPRESS**
+
+`sudo mysql_secure_installation`
+
+`sudo mysql -u root -p`
+
+`sudo mysql`
+
+`CREATE DATABASE wordpress;`
+
+`CREATE USER `wordpress`@`<Web-Server-Private-IP-Address>` IDENTIFIED BY 'mypassword';`
+
+GRANT ALL ON wordpress.* TO 'myuser'@'<Web-Server-Private-IP-Address>';
+
+
+`FLUSH PRIVILEGES;`
+
+`SHOW DATABASES;`
+
+![](./images/mysql_db.PNG)
+
+`exit`
+
+
+On the webserver EC2 intance 
+
+cd to /var/www/htmh
+
+`sudo vi wp-config.php`
+
+Edit the configuration file  as shown below
+
+
+![](./images/config.PNG)
+
+rename(disable apache)
+
+`sudo mv /etc/httpd/conf.d/welcome.conf /etc/httpd/conf.d/welcome.conf_backup`
+
+
+## **STEP 6  — CONFIGURING WORDPRESS TO REMOTE DATABASE SERVER**
+ I opened MySQL port 3306 on DB Server EC2. For extra security, I allowed access to the DB server ONLY from the Web Server’s IP address, so in the Inbound Rule configuration I specified source as /32
+
+1. Install MySQL client and test that you can connect from your Web Server to your DB server by using mysql-client
+
+    `sudo mysql -h 172.31.83.8 -u wordpress -p`
+
+2. Verify if you can successfully execute SHOW DATABASES; command and see a list of existing databases.
+
+    `SHOW DATABSES`
+
+    ![](./images/database.PNG)
+
+
+3. Change permissions and configuration so Apache could use WordPress:
+
+    `sudo chown -R apache:apache /var/www/html/`
+
+    `sudo chcon -t httpd_sys_rw_content_t /var/www/html/ -R`
+
+    `sudo setsebool -P httpd_can_network_connect=1`
+
+4. Enable TCP port 80 in Inbound Rules configuration for the Web Server EC2 (enable from everywhere 0.0.0.0/0 or from your workstation’s IP)
+
+5. I then accessed,from my browser the link to my WordPress http://<Web-Server-Public-IP-Address>, as shown below:
+
+![](./images/wp.PNG)
+
+
+![](./images/wp_sileola.PNG)
+
+
+
+![](./images/wordpress.PNG)
+
+## **THIS IS THE END OF PROJECT 6**

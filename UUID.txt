@@ -25,3 +25,21 @@ database
 UUID=038a3bad-250e-4930-8267-03fa7aae1320 /db   ext4 defaults 0 0
 
 
+sudo mysql
+CREATE DATABASE wordpress;
+CREATE USER `myuser`@`<Web-Server-Private-IP-Address>` IDENTIFIED BY 'mypass';
+GRANT ALL ON wordpress.* TO 'myuser'@'<Web-Server-Private-IP-Address>';
+FLUSH PRIVILEGES;
+SHOW DATABASES;
+exit
+
+
+CREATE USER `wordpress`@`172.31.18.227` IDENTIFIED BY 'password';
+
+GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress'@'172.31.18.227';
+
+
+PASSWORD FOR WP WEBSITE:  JBk5FSIJZWEPeFHhEU
+
+
+http://3.91.69.74/wp-admin/edit.php?post_type=page
