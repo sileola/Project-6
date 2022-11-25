@@ -93,14 +93,14 @@ To verify that this was done successfully, I ran the command:
 
 ![](./images/volume_group.PNG)
 
-Next, I used teh *lvcreate utility* to create 2 logical volumes: **apps-lv** (using half of the PV size), and **logs-lv** (using the remaining space of the PV size), with the commands below:
+Next, I used the *lvcreate utility* to create 2 logical volumes: **apps-lv** (using half of the PV size), and **logs-lv** (using the remaining space of the PV size), with the commands below:
 
 `sudo lvcreate -n apps-lv -L 14G webdata-vg`
 
 `sudo lvcreate -n logs-lv -L 14G webdata-vg`
 
 
-To verify that the Logical Volumes has been created successfully, i ram the command below:
+To verify that the Logical Volumes has been created successfully, i ran the command below:
 
 `sudo lvs`
 
@@ -155,7 +155,7 @@ Next, I run the command below to copy display and copy the block ID
 
 ![](./images/blkid.PNG)
 
-Then, I copied the UUID for /dev/mapper/webdata--vg-logs--lv and for /dev/mapper/webdata--vg-apps--lv on to a notepad
+Then, I copied the UUID for /dev/mapper/webdata--vg-logs--lv and for /dev/mapper/webdata--vg-apps--lv on to a notepad for proper formatting
 
 
 
@@ -205,3 +205,112 @@ To see all (available) mount points and free space on my server, I ran this comm
 Next, I used the gdisk utility to create a single partition on each of the 3 disks, beginning with the first volume, using the command below:
 
 `sudo gdisk /dev/xvdf`
+
+`sudo gdisk /dev/xvdg`
+
+`sudo gdisk /dev/xvdh`
+
+Next, I used the lsblk utility to view the newly configured partition on each of the 3 disks. This is displayed below:
+
+![](./images/lsblk22.PNG)
+
+Next, I installed lvm2 package using sudo yum install lvm2 by running the command below:
+
+`sudo yum install lvm2 -y`
+
+![](./images/lvm2_db.PNG)
+
+To check for available partitions, I ran the command below:
+
+`sudo lvmdiskscan`
+
+![](./images/available_partitions_db.PNG)
+
+Next, I used the pvcreate utility to mark each of 3 disks as physical volumes (PVs) to be used by LVM
+
+`sudo pvcreate /dev/xvdf1 /dev/xvdg1 /dev/xvdh1`
+
+![](./images/pv_db.PNG)
+
+
+To verify that the Physical volume has been created successfully, I ran this command:
+
+`sudo pvs`
+
+![](./images/pvssss.PNG)
+
+Next, I used the vgcreate utility to add all 3 PVs to a volume group (VG). The VG was named databasedata-vg
+
+`sudo vgcreate databasedata-vg /dev/xvdf1 /dev/xvdg1 /dev/xvdh1`
+
+To verify that this was done successfully, I ran the command:
+
+`sudo vgs`
+
+![](./images/vgs_db.PNG)
+
+Next, I used the lvcreate utility to create a logical volume named *db-lv* with the commands below:
+
+`sudo lvcreate -n db-lv -L 20G databasedata-vg`
+
+To verify that the Logical Volume has been created successfully, i ran the command below:
+
+`sudo lvs`
+
+![](./images/lv_creation.PNG)
+
+
+To verify the entire setup, I ran the following commands:
+
+`sudo vgdisplay -v #view complete setup - VG, PV, and LV`
+
+`sudo lsblk`
+
+![](./images/setup_view_db.PNG)
+
+Next, I used mkfs.ext4 to format the logical volumes with ext4 filesystem, using the commands below:
+
+`sudo mkfs.ext4 /dev/databasedata-vg/db-lv`
+
+![](./images/lv_formatting_db.PNG)
+
+Next, I created /db directory to store website files:
+
+`sudo mkdir /db`
+
+
+Then, I mounted /db on db-lv logical volume with the command below:
+
+`sudo mount /dev/databasedata-vg/db-lv /db`
+
+Next, I run the command below to copy display and copy the block ID
+
+`sudo blkid`
+
+![](./images/blkid_db.PNG)
+
+
+Then, I copied the UUID for /dev/mapper databasedata--vg-db--lv for proper formatting
+
+Next, I update /etc/fstab file so that the mount configuration will persist after restart of the server.
+
+`sudo vi /etc/fstab`
+
+![](./images/fstab_db.PNG)
+
+Next, I ran the following commands to respectively est the configuration and reload the daemon:
+
+`sudo mount -a`
+
+`sudo systemctl daemon-reload`
+
+
+Next, I verified my setup by running this command:
+
+`df -h`
+
+The output is displayed below:
+
+![](./images/setup_db_view.PNG)
+
+
