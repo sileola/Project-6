@@ -181,3 +181,14 @@ ___
  ## **STEP 2 — PREPARING THE DATABASE SERVER**
  ___
 
+Firstly, after launching my EC2 instance for my Database Server, I created 3 volumes in the same AZ (Availability Zone) as my Database Server EC2, each of 10 GiB and respectively name db1, db2 and db3.
+
+Next, I attached all three volumes one by one to the Database Server EC2 instance, as displayed below:
+
+![](./images/db_volume_attach.PNG)
+
+
+From my database server instance, I ran the command below to confirm that my volumes have been successfully attached:
+
+`lsblk`
+
